@@ -37,6 +37,7 @@ from isaaclab.utils.noise import AdditiveUniformNoiseCfg as Unoise
 from agile.rl_env import mdp
 from agile.rl_env.assets.robots.booster_t1 import T1_DELAYED_DC_CFG
 from agile.rl_env.assets.robots.unitree_g1 import G1_29DOF_DELAYED_DC_MOTOR
+from agile.rl_env.assets.robots.unitree_h1_2 import H1_2_27DOF_DELAYED_DC_MOTOR
 from agile.rl_env.mdp.terrains import ROUGH_TERRAIN_CFG  # noqa: F401, F403
 
 
@@ -221,3 +222,13 @@ class T1DebugEnvCfg(DebugEnvCfg):
 
         self.scene.contact_forces.prim_path = "{ENV_REGEX_NS}/Robot/.*"
         self.actions.joint_pos.robot_type = "t1"
+
+
+class H12DebugEnvCfg(DebugEnvCfg):
+    def __post_init__(self):
+        super().__post_init__()
+        self.scene.robot = H1_2_27DOF_DELAYED_DC_MOTOR.replace(prim_path="{ENV_REGEX_NS}/Robot")
+        self.scene.robot.spawn.articulation_props.fix_root_link = True
+        # self.scene.contact_forces.prim_path = "{ENV_REGEX_NS}/Robot/pelvis/.*"
+        self.actions.joint_pos.mirror_actions = True
+        self.actions.joint_pos.robot_type = "h1_2"

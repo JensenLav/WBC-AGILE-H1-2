@@ -38,6 +38,15 @@ gym.register(
     },
 )
 
+gym.register(
+    id="Debug-H12-v0",
+    entry_point="isaaclab.envs:ManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.debug_env_cfg:H12DebugEnvCfg",
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:DummyPpoRunnerCfg",
+    },
+)
 
 # Object interaction debug environments
 gym.register(

@@ -23,6 +23,7 @@ import torch
 from isaaclab.envs.mdp.actions import JointPositionAction  # type: ignore
 
 from agile.rl_env.mdp.symmetry.symmetry_g1 import lr_mirror_G1
+from agile.rl_env.mdp.symmetry.symmetry_h12 import lr_mirror_H12
 from agile.rl_env.mdp.symmetry.symmetry_t1 import lr_mirror_T1
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -102,14 +103,14 @@ class JointPositionGUIAction(JointPositionAction):
         self._actuator_joint_ids: dict[str, torch.Tensor] = {}
         for name, actuator in self._asset.actuators.items():
             actuator_joint_ids = self._asset.find_joints(actuator.joint_names)[0]
-            self._actuator_joint_ids[name] = torch.tensor(
-                actuator_joint_ids, device=self.device, dtype=torch.long
-            )
+            self._actuator_joint_ids[name] = torch.tensor(actuator_joint_ids, device=self.device, dtype=torch.long)
 
         if self._robot_type == "g1":
             self._symmetry_augmentation_func = lr_mirror_G1
         elif self._robot_type == "t1":
             self._symmetry_augmentation_func = lr_mirror_T1
+        elif self._robot_type == "h1_2":
+            self._symmetry_augmentation_func = lr_mirror_H12
         else:
             raise ValueError(f"Invalid robot type: {self._robot_type}")
 
