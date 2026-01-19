@@ -4,11 +4,20 @@ from isaaclab.assets import ArticulationCfg
 
 from agile.rl_env.mdp.actuators.actuators_cfg import DelayedDCMotorCfg, DelayedImplicitActuatorCfg
 
+"""
+todo: Currently these are G1 values NOT H1-2 values
+- effort
+- velocity
+- stiffness
+- damping
+- armature
+"""
+
 MAX_DELAY_PHY_STEPS = 4
 MIN_DELAY_PHY_STEPS = 0
 
 H1_2_USD_PATH = "/home/jensen/unitree_model/H12_handless/h12_handless/usd/h1_2_handless.usd"
-
+H1_2_URDF_PATH = None
 
 LEG_JOINT_NAMES = [
     ".*_hip_.*_joint",
@@ -67,6 +76,7 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
         },
         joint_vel={".*": 0.0},
     ),
+    # this can be lower than true values but starting with true values
     actuators={
         "legs": DelayedDCMotorCfg(
             joint_names_expr=[
@@ -76,10 +86,10 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
                 ".*_knee_joint",
             ],
             effort_limit_sim={
-                ".*_hip_yaw_joint": 88.0,
-                ".*_hip_roll_joint": 88.0,
-                ".*_hip_pitch_joint": 88.0,
-                ".*_knee_joint": 139.0,
+                ".*_hip_yaw_joint": 220.0,
+                ".*_hip_roll_joint": 220.0,
+                ".*_hip_pitch_joint": 220.0,
+                ".*_knee_joint": 360.0,
             },
             velocity_limit_sim={
                 ".*_hip_yaw_joint": 32.0,
@@ -88,16 +98,16 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
                 ".*_knee_joint": 20.0,
             },
             stiffness={
-                ".*_hip_yaw_joint": 100.0,
-                ".*_hip_roll_joint": 100.0,
-                ".*_hip_pitch_joint": 100.0,
-                ".*_knee_joint": 200.0,
+                ".*_hip_yaw_joint": 200.0,
+                ".*_hip_roll_joint": 200.0,
+                ".*_hip_pitch_joint": 200.0,
+                ".*_knee_joint": 300.0,
             },
             damping={
                 ".*_hip_yaw_joint": 2.5,
                 ".*_hip_roll_joint": 2.5,
                 ".*_hip_pitch_joint": 2.5,
-                ".*_knee_joint": 5.0,
+                ".*_knee_joint": 4.0,
             },
             armature={
                 ".*_hip_.*": 0.02,
@@ -110,16 +120,16 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
         "feet": DelayedDCMotorCfg(
             joint_names_expr=[".*_ankle_pitch_joint", ".*_ankle_roll_joint"],
             stiffness={
-                ".*_ankle_pitch_joint": 20.0,
-                ".*_ankle_roll_joint": 20.0,
+                ".*_ankle_pitch_joint": 40.0,
+                ".*_ankle_roll_joint": 40.0,
             },
             damping={
-                ".*_ankle_pitch_joint": 0.2,
-                ".*_ankle_roll_joint": 0.1,
+                ".*_ankle_pitch_joint": 2.0,
+                ".*_ankle_roll_joint": 2.0,
             },
             effort_limit_sim={
-                ".*_ankle_pitch_joint": 50.0,
-                ".*_ankle_roll_joint": 50.0,
+                ".*_ankle_pitch_joint": 75.0,
+                ".*_ankle_roll_joint": 75.0,
             },
             velocity_limit_sim={
                 ".*_ankle_pitch_joint": 37.0,
@@ -135,7 +145,7 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
                 "torso_joint",
             ],
             effort_limit_sim={
-                "torso_joint": 50.0,
+                "torso_joint": 220.0,
             },
             velocity_limit_sim={
                 "torso_joint": 37.0,
@@ -207,6 +217,9 @@ ARMATURE_5020 = 0.003609725
 ARMATURE_7520_14 = 0.010177520
 ARMATURE_7520_22 = 0.025101925
 ARMATURE_4010 = 0.00425
+# H1_2
+ARMATURE_M107_15 = 0.063259741
+ARMATURE_M107_24 = 0.160478022
 
 NATURAL_FREQ = 10 * 2.0 * 3.1415926535  # 10Hz
 DAMPING_RATIO = 2.0
@@ -215,12 +228,17 @@ STIFFNESS_5020 = ARMATURE_5020 * NATURAL_FREQ**2
 STIFFNESS_7520_14 = ARMATURE_7520_14 * NATURAL_FREQ**2
 STIFFNESS_7520_22 = ARMATURE_7520_22 * NATURAL_FREQ**2
 STIFFNESS_4010 = ARMATURE_4010 * NATURAL_FREQ**2
+# H1_2
+STIFFNESS_M107_15 = ARMATURE_M107_15 * NATURAL_FREQ**2
+STIFFNESS_M107_24 = ARMATURE_M107_24 * NATURAL_FREQ**2
 
 DAMPING_5020 = 2.0 * DAMPING_RATIO * ARMATURE_5020 * NATURAL_FREQ
 DAMPING_7520_14 = 2.0 * DAMPING_RATIO * ARMATURE_7520_14 * NATURAL_FREQ
 DAMPING_7520_22 = 2.0 * DAMPING_RATIO * ARMATURE_7520_22 * NATURAL_FREQ
 DAMPING_4010 = 2.0 * DAMPING_RATIO * ARMATURE_4010 * NATURAL_FREQ
-
+# H1_2
+DAMPING_M107_15 = 2.0 * DAMPING_RATIO * ARMATURE_M107_15 * NATURAL_FREQ
+DAMPING_M107_24 = 2.0 * DAMPING_RATIO * ARMATURE_M107_24 * NATURAL_FREQ
 
 H1_2_27DOF = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
@@ -260,10 +278,10 @@ H1_2_27DOF = ArticulationCfg(
                 ".*_knee_joint",
             ],
             effort_limit_sim={
-                ".*_hip_yaw_joint": 88.0,
-                ".*_hip_roll_joint": 139.0,
-                ".*_hip_pitch_joint": 88.0,
-                ".*_knee_joint": 139.0,
+                ".*_hip_yaw_joint": 220.0,
+                ".*_hip_roll_joint": 220.0,
+                ".*_hip_pitch_joint": 220.0,
+                ".*_knee_joint": 360.0,
             },
             velocity_limit_sim={
                 ".*_hip_yaw_joint": 32.0,
@@ -272,22 +290,22 @@ H1_2_27DOF = ArticulationCfg(
                 ".*_knee_joint": 20.0,
             },
             stiffness={
-                ".*_hip_pitch_joint": STIFFNESS_7520_14,
-                ".*_hip_roll_joint": STIFFNESS_7520_22,
-                ".*_hip_yaw_joint": STIFFNESS_7520_14,
-                ".*_knee_joint": STIFFNESS_7520_22,
+                ".*_hip_pitch_joint": STIFFNESS_M107_24,
+                ".*_hip_roll_joint": STIFFNESS_M107_24,
+                ".*_hip_yaw_joint": STIFFNESS_M107_15,
+                ".*_knee_joint": STIFFNESS_M107_24,
             },
             damping={
-                ".*_hip_pitch_joint": DAMPING_7520_14,
-                ".*_hip_roll_joint": DAMPING_7520_22,
-                ".*_hip_yaw_joint": DAMPING_7520_14,
-                ".*_knee_joint": DAMPING_7520_22,
+                ".*_hip_pitch_joint": DAMPING_M107_24,
+                ".*_hip_roll_joint": DAMPING_M107_24,
+                ".*_hip_yaw_joint": DAMPING_M107_15,
+                ".*_knee_joint": DAMPING_M107_24,
             },
             armature={
-                ".*_hip_pitch_joint": ARMATURE_7520_14,
-                ".*_hip_roll_joint": ARMATURE_7520_22,
-                ".*_hip_yaw_joint": ARMATURE_7520_14,
-                ".*_knee_joint": ARMATURE_7520_22,
+                ".*_hip_pitch_joint": ARMATURE_M107_24,
+                ".*_hip_roll_joint": ARMATURE_M107_24,
+                ".*_hip_yaw_joint": ARMATURE_M107_15,
+                ".*_knee_joint": ARMATURE_M107_24,
             },
             min_delay=MIN_DELAY_PHY_STEPS,
             max_delay=MAX_DELAY_PHY_STEPS,
@@ -296,9 +314,9 @@ H1_2_27DOF = ArticulationCfg(
             effort_limit_sim=50.0,
             velocity_limit_sim=37.0,
             joint_names_expr=[".*_ankle_pitch_joint", ".*_ankle_roll_joint"],
-            stiffness=2.0 * STIFFNESS_5020,
-            damping=2.0 * DAMPING_5020,
-            armature=2.0 * ARMATURE_5020,
+            stiffness=2.0 * STIFFNESS_7520_14,
+            damping=2.0 * DAMPING_7520_14,
+            armature=2.0 * ARMATURE_7520_14,
             min_delay=MIN_DELAY_PHY_STEPS,
             max_delay=MAX_DELAY_PHY_STEPS,
         ),
@@ -329,13 +347,13 @@ H1_2_27DOF = ArticulationCfg(
                 ".*_wrist_.*_joint",
             ],
             effort_limit_sim={
-                ".*_shoulder_pitch_joint": 25.0,
-                ".*_shoulder_roll_joint": 25.0,
-                ".*_shoulder_yaw_joint": 25.0,
-                ".*_elbow_joint": 25.0,
-                ".*_wrist_roll_joint": 25.0,
-                ".*_wrist_pitch_joint": 5.0,
-                ".*_wrist_yaw_joint": 5.0,
+                ".*_shoulder_pitch_joint": 120.0,
+                ".*_shoulder_roll_joint": 120.0,
+                ".*_shoulder_yaw_joint": 120.0,
+                ".*_elbow_joint": 120.0,
+                ".*_wrist_roll_joint": 75.0,
+                ".*_wrist_pitch_joint": 75.0,
+                ".*_wrist_yaw_joint": 75.0,
             },
             velocity_limit_sim={
                 ".*_shoulder_pitch_joint": 37.0,
