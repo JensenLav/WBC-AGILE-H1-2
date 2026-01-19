@@ -4,15 +4,6 @@ from isaaclab.assets import ArticulationCfg
 
 from agile.rl_env.mdp.actuators.actuators_cfg import DelayedDCMotorCfg, DelayedImplicitActuatorCfg
 
-"""
-todo: Currently these are G1 values NOT H1-2 values
-- effort
-- velocity
-- stiffness
-- damping
-- armature
-"""
-
 MAX_DELAY_PHY_STEPS = 4
 MIN_DELAY_PHY_STEPS = 0
 
@@ -42,7 +33,7 @@ FEET_LINK_NAMES = [
     "left_ankle_roll_link",
     "right_ankle_roll_link",
 ]
-DEFAULT_PELVIS_HEIGHT = 0.72
+DEFAULT_PELVIS_HEIGHT = 1.0
 
 # Using the delayed DC motor model.
 H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
@@ -170,13 +161,13 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
                 ".*_wrist_.*_joint",
             ],
             effort_limit_sim={
-                ".*_shoulder_pitch_joint": 25.0,
-                ".*_shoulder_roll_joint": 25.0,
-                ".*_shoulder_yaw_joint": 25.0,
-                ".*_elbow_joint": 25.0,
+                ".*_shoulder_pitch_joint": 120.0,
+                ".*_shoulder_roll_joint": 120.0,
+                ".*_shoulder_yaw_joint": 75.0,
+                ".*_elbow_joint": 120.0,
                 ".*_wrist_roll_joint": 25.0,
-                ".*_wrist_pitch_joint": 5.0,
-                ".*_wrist_yaw_joint": 5.0,
+                ".*_wrist_pitch_joint": 25.0,
+                ".*_wrist_yaw_joint": 25.0,
             },
             velocity_limit_sim={
                 ".*_shoulder_pitch_joint": 37.0,
@@ -191,7 +182,7 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
                 ".*_shoulder_pitch_joint": 90.0,
                 ".*_shoulder_roll_joint": 60.0,
                 ".*_shoulder_yaw_joint": 20.0,
-                ".*_elbow_joint": 60.0,
+                ".*_elbow_joint": 90.0,
                 ".*_wrist_.*_joint": 4.0,
             },
             damping={
@@ -325,7 +316,7 @@ H1_2_27DOF = ArticulationCfg(
                 "torso_.*_joint",
             ],
             effort_limit_sim={
-                "torso_joint": 50.0,
+                "torso_joint": 200.0,
             },
             velocity_limit_sim={
                 "torso_joint": 37.0,
@@ -368,7 +359,7 @@ H1_2_27DOF = ArticulationCfg(
                 ".*_shoulder_pitch_joint": 90.0,
                 ".*_shoulder_roll_joint": 60.0,
                 ".*_shoulder_yaw_joint": 20.0,
-                ".*_elbow_joint": 60.0,
+                ".*_elbow_joint": 90.0,
                 ".*_wrist_.*_joint": 4.0,
             },
             damping={
