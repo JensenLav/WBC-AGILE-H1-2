@@ -18,8 +18,8 @@ LEG_JOINT_NAMES = [
 ANKLE_JOINT_NAMES = [
     ".*_ankle_.*_joint",
 ]
-torso_JOINT_NAMES = [
-    "torso_.*_joint",
+WAIST_JOINT_NAMES = [
+    "torso_joint",
 ]
 ARM_JOINT_NAMES = [
     ".*_shoulder_.*_joint",
@@ -59,7 +59,7 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
     ),
     soft_joint_pos_limit_factor=0.9,
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 0.9),
+        pos=(0.0, 0.0, 1.00),
         joint_pos={
             ".*_hip_pitch_joint": -0.10,
             ".*_knee_joint": 0.30,
@@ -89,9 +89,9 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
                 ".*_knee_joint": 20.0,
             },
             stiffness={
-                ".*_hip_yaw_joint": 200.0,
-                ".*_hip_roll_joint": 200.0,
-                ".*_hip_pitch_joint": 200.0,
+                ".*_hip_yaw_joint": 220.0,
+                ".*_hip_roll_joint": 220.0,
+                ".*_hip_pitch_joint": 220.0,
                 ".*_knee_joint": 300.0,
             },
             damping={
@@ -179,11 +179,11 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
                 ".*_wrist_yaw_joint": 22.0,
             },
             stiffness={
-                ".*_shoulder_pitch_joint": 90.0,
-                ".*_shoulder_roll_joint": 60.0,
-                ".*_shoulder_yaw_joint": 20.0,
-                ".*_elbow_joint": 90.0,
-                ".*_wrist_.*_joint": 4.0,
+                ".*_shoulder_pitch_joint": 120.0,
+                ".*_shoulder_roll_joint": 120.0,
+                ".*_shoulder_yaw_joint": 75.0,
+                ".*_elbow_joint": 120.0,
+                ".*_wrist_.*_joint": 25.0,
             },
             damping={
                 ".*_shoulder_pitch_joint": 2.0,
