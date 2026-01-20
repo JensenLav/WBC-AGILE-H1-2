@@ -71,7 +71,7 @@ class terrain_levels_vel_curriculum(ManagerTermBase):
 
         traveled_distance = env.command_manager._terms[command_name].metrics["traveled_distance"][env_ids]
 
-        # move up if the robot has traveled far enou  gh
+        # move up if the robot has traveled far enough
         succeeded = traveled_distance > move_up_distance
         self.num_successes[env_ids] += succeeded
 
