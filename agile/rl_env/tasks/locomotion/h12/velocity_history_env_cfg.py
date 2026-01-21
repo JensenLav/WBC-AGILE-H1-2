@@ -22,7 +22,7 @@ from agile.rl_env.assets.robots import unitree_h1_2 as unitree_h12
 from agile.rl_env.mdp.terrains import LESS_ROUGH_TERRAIN_CFG, MEDIUM_ROUGH_TERRAIN_CFG  # noqa: F401
 
 # Define controlled joints for H1-2 (legs + torso for locomotion)
-CONTROLLED_JOINT_NAMES = unitree_h12.LEG_JOINT_NAMES + ["torso_joint"]
+CONTROLLED_JOINT_NAMES = unitree_h12.LEG_JOINT_NAMES
 
 ##
 # Scene definition
@@ -139,7 +139,7 @@ class ActionsCfg:
 
     random_pos = mdp.RandomActionCfg(
         asset_name="robot",
-        joint_names_exclude=unitree_h12.LEG_JOINT_NAMES + unitree_h12.WAIST_JOINT_NAMES,
+        joint_names_exclude=unitree_h12.LEG_JOINT_NAMES,
         sample_range=(0.1, 2.5),
         preserve_order=True,
         velocity_profile_cfg=mdp.TrapezoidalVelocityProfileCfg(
@@ -509,7 +509,7 @@ class LocomotionEventCfg:
             "com_range": {"x": (-0.15, 0.25), "y": (-0.05, 0.05), "z": (-0.15, 0.15)},
         },
     )
-
+    # LOOK: could increase ranges
     apply_external_force_torque = EventTerm(
         func=mdp.apply_external_force_torque,
         mode="interval",
@@ -520,7 +520,7 @@ class LocomotionEventCfg:
             "torque_range": (-5.0, 5.0),
         },
     )
-
+    # LOOK: could increase ranges
     apply_external_force_torque_extremities = EventTerm(
         func=mdp.apply_external_force_torque,
         mode="interval",
@@ -664,6 +664,9 @@ class H12LowerVelocityHistoryEnvCfg(ManagerBasedRLEnvCfg):
             self.scene.height_measurement_sensor_right_foot.update_period = self.sim.dt
 
         self.only_positive_rewards = False
+
+        self.observations.policy.concatenate_terms = False
+        self.observations.policy.flatten_history_dim = False
 
         if getattr(self.curriculum, "terrain_levels", None) is not None:
             if self.scene.terrain.terrain_generator is not None:
