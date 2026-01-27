@@ -29,7 +29,7 @@ def lr_mirror_H12(
     actions: torch.Tensor | None = None,
     obs_type: str = "policy",  # noqa: ARG001
 ) -> tuple[TensorDict | None, torch.Tensor | None]:
-    """Left-right symmetry augmentation for the G1 robot.
+    """Left-right symmetry augmentation for the H12 robot.
 
     Args:
         env: The environment.

@@ -17,7 +17,7 @@
 from isaaclab.utils import configclass
 
 from agile.rl_env.mdp.symmetry import (
-    lr_mirror_G1,
+    lr_mirror_H12,
 )  # noqa: F401
 from agile.rl_env.rsl_rl import (  # noqa: F401
     RslRlDistillationAlgorithmCfg,
@@ -30,14 +30,14 @@ from agile.rl_env.rsl_rl import (  # noqa: F401
 
 
 @configclass
-class G1VelocityHeightPpoRunnerCfg(RslRlOnPolicyRunnerCfg):
+class H12VelocityHeightPpoRunnerCfg(RslRlOnPolicyRunnerCfg):
     seed = 42
     num_steps_per_env = 24
     max_iterations = 30_000
     save_interval = 250
-    experiment_name = "velocity_height_g1_lower"
-    run_name = "velocity_height_g1_lower"
-    wandb_project = "Velocity-Height-G1-Lower"
+    experiment_name = "velocity_height_h12_lower"
+    run_name = "velocity_height_h12_lower"
+    wandb_project = "Velocity-Height-H12-Lower"
     empirical_normalization = False
     enable_entropy_coef_annealing = True
     entropy_coef_annealing_start_progress = 0.2
@@ -65,19 +65,19 @@ class G1VelocityHeightPpoRunnerCfg(RslRlOnPolicyRunnerCfg):
         symmetry_cfg=RslRlSymmetryCfg(
             use_data_augmentation=True,
             use_mirror_loss=False,
-            data_augmentation_func=lr_mirror_G1,
+            data_augmentation_func=lr_mirror_H12,
         ),
     )
 
 
 @configclass
-class G1VelocityHeightDistillationRecurrentRunnerCfg(G1VelocityHeightPpoRunnerCfg):
+class H12VelocityHeightDistillationRecurrentRunnerCfg(H12VelocityHeightPpoRunnerCfg):
     seed = 42
     num_steps_per_env = 24
     max_iterations = 10_000
     save_interval = 100
-    experiment_name = "velocity_height_g1_lower_distillation"
-    run_name = "velocity_height_g1_lower_distillation"
+    experiment_name = "velocity_height_h12_lower_distillation"
+    run_name = "velocity_height_h12_lower_distillation"
     algorithm = RslRlDistillationAlgorithmCfg(
         num_learning_epochs=5,
         gradient_length=15,
@@ -87,20 +87,20 @@ class G1VelocityHeightDistillationRecurrentRunnerCfg(G1VelocityHeightPpoRunnerCf
     )
     policy = RslRlStudentTrainedTeacherCfg(
         class_name="StudentTrainedTeacherRecurrent",  # "StudentTrainedTeacher",
-        teacher_path="agile/data/policy/velocity_height_g1/unitree_g1_velocity_height_teacher.pt",
+        teacher_path="agile/data/policy/velocity_height_h12/unitree_h12_velocity_height_teacher.pt",
         student_hidden_dims=[256, 256, 128],
         activation="elu",
     )
 
 
 @configclass
-class G1VelocityHeightDistillationHistoryRunnerCfg(G1VelocityHeightPpoRunnerCfg):
+class H12VelocityHeightDistillationHistoryRunnerCfg(H12VelocityHeightPpoRunnerCfg):
     seed = 42
     num_steps_per_env = 24
     max_iterations = 10_000
     save_interval = 100
-    experiment_name = "velocity_height_g1_lower_distillation"
-    run_name = "velocity_height_g1_lower_distillation"
+    experiment_name = "velocity_height_h12_lower_distillation"
+    run_name = "velocity_height_h12_lower_distillation"
     algorithm = RslRlDistillationAlgorithmCfg(
         num_learning_epochs=5,
         gradient_length=15,
@@ -110,13 +110,13 @@ class G1VelocityHeightDistillationHistoryRunnerCfg(G1VelocityHeightPpoRunnerCfg)
         # The symmetry will be ignored for distilling recurrent policies.
         symmetry_cfg=RslRlSymmetryCfg(
             use_mirror_loss=True,
-            data_augmentation_func=lr_mirror_G1,
+            data_augmentation_func=lr_mirror_H12,
             mirror_loss_coeff=0.1,  # Start with a small coefficient
         ),
     )
     policy = RslRlStudentTrainedTeacherCfg(
         class_name="StudentTrainedTeacher",  # "StudentTrainedTeacher",
-        teacher_path="agile/data/policy/velocity_height_g1/unitree_g1_velocity_height_teacher.pt",
+        teacher_path="agile/data/policy/velocity_height_h12/unitree_h12_velocity_height_teacher.pt",
         student_hidden_dims=[512, 256, 128],
         activation="elu",
     )
