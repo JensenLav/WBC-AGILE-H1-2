@@ -13,8 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import g1
+from . import g1, h12
 
 __all__ = [
     "g1",
+    "h12",
 ]
