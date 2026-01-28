@@ -277,7 +277,7 @@ class ActionsCfg:
     joint_pos = mdp.JointPositionActionCfg(
         asset_name="robot",
         joint_names=unitree_h12.LEG_JOINT_NAMES,
-        scale=unitree_h12.H12_ACTION_SCALE_LOWER,
+        scale=unitree_h12.H1_2_ACTION_SCALE_LOWER,
         use_default_offset=True,
         clip={".*": (-6.0, 6.0)},
     )
@@ -287,9 +287,7 @@ class ActionsCfg:
         asset_name="robot",
         joint_names_exclude=unitree_h12.LEG_JOINT_NAMES,
         joint_pos_limits={
-            "waist_roll_joint": (-0.0, 0.0),
-            "waist_pitch_joint": (-0.0, 0.0),
-            "waist_yaw_joint": (-math.radians(15.0), math.radians(15.0)),
+            "torso_joint": (-math.radians(15.0), math.radians(15.0)),
         },
         sample_range=(0.1, 2.0),
         velocity_profile_cfg=mdp.TrapezoidalVelocityProfileCfg(
@@ -550,7 +548,7 @@ class TerminationsCfg:
         func=mdp.link_distance,
         params={
             "asset_cfg": SceneEntityCfg("robot", body_names=".*knee_link"),
-            "min_distance_threshold": 0.2,
+            "min_distance_threshold": 0.12,
         },
     )
 
@@ -713,7 +711,7 @@ class LocomotionEventCfg:
             "pose_range": {
                 "x": (-2.5, 2.5),
                 "y": (-2.5, 2.5),
-                "z": (-0.0, 0.0),
+                "z": (0.1, 0.3),
                 "yaw": (-3.14, 3.14),
                 "roll": (-math.radians(10), math.radians(10)),
                 "pitch": (-math.radians(10), math.radians(10)),

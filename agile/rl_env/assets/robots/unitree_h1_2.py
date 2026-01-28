@@ -33,7 +33,7 @@ FEET_LINK_NAMES = [
     "left_ankle_roll_link",
     "right_ankle_roll_link",
 ]
-DEFAULT_PELVIS_HEIGHT = 1.0
+DEFAULT_PELVIS_HEIGHT = 1.05
 
 # Using the delayed DC motor model.
 H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
@@ -187,8 +187,8 @@ H1_2_27DOF_DELAYED_DC_MOTOR = ArticulationCfg(
             },
             damping={
                 ".*_shoulder_pitch_joint": 2.0,
-                ".*_shoulder_roll_joint": 1.0,
-                ".*_shoulder_yaw_joint": 0.4,
+                ".*_shoulder_roll_joint": 2.0,
+                ".*_shoulder_yaw_joint": 1.0,
                 ".*_elbow_joint": 1.0,
                 ".*_wrist_.*_joint": 0.2,
             },
@@ -313,7 +313,7 @@ H1_2_27DOF = ArticulationCfg(
         ),
         "waist": ImplicitActuatorCfg(
             joint_names_expr=[
-                "torso_.*_joint",
+                "torso_joint",
             ],
             effort_limit_sim={
                 "torso_joint": 200.0,
