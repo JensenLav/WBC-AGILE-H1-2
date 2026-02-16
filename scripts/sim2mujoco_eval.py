@@ -75,7 +75,7 @@ def main():
     command_manager = None
     if not args.disable_keyboard and not args.no_viewer:
         command_manager = CommandManager(
-            device=device, defaults={"linear_x": 0.0, "linear_y": 0.0, "angular_z": 0.0, "height": 0.72}
+            device=device, defaults={"linear_x": 0.0, "linear_y": 0.0, "angular_z": 0.0, "height": 1.05}
         )
         print("\n✓ Keyboard control enabled")
     else:

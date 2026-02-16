@@ -113,6 +113,7 @@ class StudentVelocityPolicyCfg(ObsGroup):
     velocity_height_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
 
     # observation terms (order preserved)
+    # base_lin_vel = ObsTerm(func=mdp.base_lin_vel, noise=Unoise(n_min=-0.1, n_max=0.1))
     base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
     projected_gravity = ObsTerm(
         func=mdp.projected_gravity,
@@ -256,13 +257,13 @@ class CommandsCfg:
         default_height=unitree_h12.DEFAULT_PELVIS_HEIGHT,
         ema_smoothing_param=0.5,
         ranges=mdp.UniformVelocityBaseHeightCommandCfg.Ranges(
-            lin_vel_x=(-0.5, 0.5),
+            lin_vel_x=(-0.5, 1.0),
             lin_vel_y=(-0.5, 0.5),
             ang_vel_z=(-1.0, 1.0),
             heading=(-math.pi, math.pi),
-            base_height=(0.6, unitree_h12.DEFAULT_PELVIS_HEIGHT),
+            base_height=(0.5, unitree_h12.DEFAULT_PELVIS_HEIGHT),
         ),
-        min_walk_height=0.6,
+        min_walk_height=0.75,
         random_height_during_walking=False,
         height_sensor="height_measurement_sensor",
         root_name="pelvis",
@@ -338,27 +339,27 @@ class RewardsCfg:
     termination_penalty = RewTerm(func=mdp.is_terminated, weight=-200.0)
     track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_yaw_frame_exp_weighted,
-        weight=1.0,
+        weight=5.0,
         params={"command_name": "base_velocity", "std": 0.2},
     )
     track_ang_vel_z_exp = RewTerm(
         func=mdp.track_ang_vel_z_world_exp,
-        weight=1.0,
+        weight=3.0,
         params={"command_name": "base_velocity", "std": 0.2},
     )
     track_base_height_exp_smooth = RewTerm(
         func=mdp.track_base_height_exp_smooth,
-        weight=1.0,
+        weight=5.0,
         params={"command_name": "base_velocity", "std": 0.2},
     )
     no_undersired_base_velocity_exp = RewTerm(
         func=mdp.no_undersired_base_velocity_exp_if_null_cmd,
-        weight=1.0,
+        weight=3.0,
         params={"asset_cfg": SceneEntityCfg("robot"), "std": 0.1},
     )
     equal_foot_force_if_null_cmd = RewTerm(
         func=mdp.equal_foot_force_if_null_cmd,
-        weight=1.0,
+        weight=2.0,
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*ankle_roll_link"),
@@ -366,7 +367,7 @@ class RewardsCfg:
     )
     stand_with_both_feet_if_null_cmd = RewTerm(
         func=mdp.stand_with_both_feet_if_null_cmd,
-        weight=1.0,
+        weight=2.0,
         params={
             "threshold": 1.0,
             "command_name": "base_velocity",
@@ -403,12 +404,12 @@ class RewardsCfg:
     )
     action_rate = RewTerm(
         func=mdp.action_rate_l2,
-        weight=-0.01,
+        weight=-0.02,
         params={"asset_cfg": SceneEntityCfg("robot")},
     )
     action_rate_rate = RewTerm(
         func=mdp.action_rate_rate_l2,
-        weight=-0.05,
+        weight=-0.07,
         params={"asset_cfg": SceneEntityCfg("robot")},
     )
     root_acc = RewTerm(
@@ -425,7 +426,7 @@ class RewardsCfg:
     # Stylistic rewards
     relax_if_null_cmd = RewTerm(
         func=mdp.relax_if_null_cmd_exp,
-        weight=1.0,
+        weight=2.0,
         params={
             "command_name": "base_velocity",
             "std": 0.25,
@@ -435,7 +436,7 @@ class RewardsCfg:
 
     feet_slide = RewTerm(
         func=mdp.feet_slide,
-        weight=-0.1,
+        weight=-0.5,
         params={
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*ankle_roll_link"),
             "asset_cfg": SceneEntityCfg("robot", body_names=".*ankle_roll_link"),
@@ -444,19 +445,19 @@ class RewardsCfg:
 
     feet_roll = RewTerm(
         func=mdp.feet_roll_l2,
-        weight=-1.0,
+        weight=-4.5,
         params={"asset_cfg": SceneEntityCfg("robot", body_names=".*ankle_roll_link.*")},
     )
 
     feet_yaw_diff = RewTerm(
         func=mdp.feet_yaw_diff_l2,
-        weight=-0.2,
+        weight=-0.5,
         params={"asset_cfg": SceneEntityCfg("robot", body_names=".*ankle_roll_link.*")},
     )
 
     feet_yaw_mean = RewTerm(
         func=mdp.feet_yaw_mean_vs_base,
-        weight=-1.0,
+        weight=-1.5,
         params={
             "feet_asset_cfg": SceneEntityCfg("robot", body_names=".*ankle_roll_link.*"),
             "base_body_cfg": SceneEntityCfg("robot", body_names="torso_link"),
@@ -474,10 +475,10 @@ class RewardsCfg:
 
     impact_velocity = RewTerm(
         func=mdp.impact_velocity_l1,
-        weight=-0.5,
+        weight=-0.7,
         params={
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*ankle_roll_link"),
-            "force_threshold": 10.0,
+            "force_threshold": 15.0,
         },
     )
 
@@ -490,7 +491,7 @@ class RewardsCfg:
     # Penalize hip joint deviation.
     hip_pos_pen = RewTerm(
         func=mdp.joint_deviation_l2,
-        weight=-1.0,
+        weight=-0.7,
         params={
             "robot_cfg": SceneEntityCfg(
                 "robot",
@@ -539,8 +540,8 @@ class TerminationsCfg:
         func=mdp.link_distance,
         params={
             "asset_cfg": SceneEntityCfg("robot", body_names=".*ankle_roll_link"),
-            "min_distance_threshold": 0.1,
-            "max_distance_threshold": 0.5,
+            "min_distance_threshold": 0.167,  # six seven
+            "max_distance_threshold": 0.7,
         },
     )
 
@@ -688,8 +689,8 @@ class LocomotionEventCfg:
         interval_range_s=(2.0, 10.0),
         params={
             "asset_cfg": SceneEntityCfg("robot", body_names="torso_link"),
-            "force_range": (-5.0, 5.0),
-            "torque_range": (-2.0, 2.0),
+            "force_range": (-8.0, 8.0),
+            "torque_range": (-4.0, 4.0),
         },
     )
 
